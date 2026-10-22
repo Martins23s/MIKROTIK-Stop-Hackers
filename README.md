@@ -102,12 +102,12 @@ ataque.
 
 Obtenha um roteador ou servidor mais poderoso.
 
-# Obtenha um link de uplink mais rápido 
-# Reduza o número de regras de firewall, filas e outras ações de tratamento de pacotes 
-# Rastreie o caminho do ataque e bloqueie-o mais perto da fonte (pelo provedor upstream)
-# Inundação TCP SYN 
-# Mais informações: Inundação SYN. 
-# Diagnosticar 
+ Obtenha um link de uplink mais rápido 
+ Reduza o número de regras de firewall, filas e outras ações de tratamento de pacotes 
+ Rastreie o caminho do ataque e bloqueie-o mais perto da fonte (pelo provedor upstream)
+ Inundação TCP SYN 
+ Mais informações: Inundação SYN. 
+ Diagnosticar 
 
 # Vamos começar a configuração. 
 
