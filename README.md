@@ -145,9 +145,11 @@ add chain=detect-ddos action=add-src-to-address-list address-list=ddoser address
 add chain=forward connection-state=new src-address-list=ddoser dst-address-list=ddosed action=drop
 
 
-MIKROTIK:- Bloqueando o ataque de força bruta SSH 
+# MIKROTIK:- Bloqueando o ataque de força bruta SSH 
 por 10 dias. 
+
 O ataque de força bruta SSH será banido por 10 dias após tentativas repetitivas. 
+
 /ip firewall filter 
 add chain=input protocol=tcp dst-port=22 src-address-list=ssh_blacklist action=drop \ comment="drop ssh brute 
 forcers" disabled=no 
@@ -161,11 +163,14 @@ add chain=input protocol=tcp dst-port=22 connection-state=new action=add-src-to-
 list=ssh_stage1 address-list-timeout=1m comment="" disabled=no 
 add chain=forward protocol=tcp dst-port=22 src-address-list=ssh_blacklist action=drop \ comment="drop ssh 
 brute downstream" disabled=no 
-MIKROTIK:- Como parar o ataque de força bruta SSH no 
+
+# MIKROTIK:- Como parar o ataque de força bruta SSH no 
 mikrotik 
+
 Às vezes, você pode ver que muitas conexões SSH foram estabelecidas em seu roteador e, devido a esse 
 problema, o processo da CPU do roteador será alto e a utilização da largura de banda será alta. Então, nesse 
-caso, você pode considerar isso como um ataque de força bruta SSH em sua rede. 
+caso, você pode considerar isso como um ataque de força bruta SSH em sua rede.
+
 /ip firewall filter 
 add chain=input protocol=tcp dst-port=22 src-address-list=ssh_blacklist action=drop \ comment="drop ssh 
 brute forcers" disabled=no 
@@ -178,19 +183,25 @@ src-to-address-list address-list=ssh_stage2 address-list-timeout=1m comment="" d
 add chain=input protocol=tcp dst-port=22 connection-state=new action=add-src-to-address-list \ address
 list=ssh_stage1 address-list-timeout=1m comment="" disabled=no 
 add chain=forward protocol=tcp dst-port=22 src-address-list=ssh_blacklist action=drop \ comment="drop ssh 
-brute downstream" disabled=no 
-MIKROTIK:-FTP Brute force Attack 
+brute downstream" disabled=no
+
+# MIKROTIK:-FTP Brute force Attack
+
 Às vezes, você pode ver que muitas conexões FTP foram estabelecidas em seu roteador e, devido a esse 
 problema, o processo da CPU do roteador será alto e a utilização da largura de banda será alta. Então, nesse 
-caso, você pode considerar isso como um ataque de força bruta FTP em sua rede. 
+caso, você pode considerar isso como um ataque de força bruta FTP em sua rede.
+
 /ip firewall filter 
 add chain=input protocol=tcp dst-port=21 src-address-list=ftp_blacklist action=drop \ comment="drop ftp brute 
 forcers" 
 add chain=output action=accept protocol=tcp content="530 Login incorrect" dst-limit=1/1m,9,dst-address/1m 
 add chain=output action=add-dst-to-address-list protocol=tcp content="530 Login incorrect" \ address
 list=ftp_blacklist address-list-timeout=3h 
-MIKROTIK: ICMP security and ICMP Flooding . 
-Configure as regras abaixo para minimizar as solicitações ICMP para seus dispositivos. 
+
+# MIKROTIK: ICMP security and ICMP Flooding.
+
+Configure as regras abaixo para minimizar as solicitações ICMP para seus dispositivos.
+
 /ip firewall filter 
 add chain=icmp protocol=icmp icmp-options=0:0 action=accept \ comment="echo reply" 
 add chain=icmp protocol=icmp icmp-options=3:0 action=accept \ comment="net unreachable" 
@@ -199,14 +210,18 @@ add chain=icmp protocol=icmp icmp-options=4:0 action=accept \ comment="allow sou
 add chain=icmp protocol=icmp icmp-options=8:0 action=accept \ comment="allow echo request" 
 add chain=icmp protocol=icmp icmp-options=11:0 action=accept \ comment="allow time exceed" 
 add chain=icmp protocol=icmp icmp-options=12:0 action=accept \ comment="allow parameter bad" 
-add chain=icmp action=drop comment="deny all other types" 
-MIKROTIK: Como encontrar e bloquear o Port Scanner 
+add chain=icmp action=drop comment="deny all other types"
+
+# MIKROTIK: Como encontrar e bloquear o Port Scanner 
+
 Uma varredura de porta ou portscan é um processo que envia solicitações de clientes para um intervalo de 
 endereços de porta de servidor em um host, com o objetivo de encontrar uma porta ativa; este não é um 
 processo nefasto por si só.[1] A maioria dos usos de uma varredura de porta não são ataques, mas sim simples 
 sondagens para determinar serviços disponíveis em uma máquina remota. Configure as regras abaixo para 
-descartar o scanner de portas: 
+descartar o scanner de portas:
+
 Rule-1 
+
 /ip firewall filter 
 add chain=input protocol=tcp psd=21,3s,3,1 action=add-src-to-address-list address-list="port scanners" address
 list-timeout=2w comment="Port scanners to list " disabled=no 
@@ -222,25 +237,33 @@ add chain=input protocol=tcp tcp-flags=fin,syn,rst,psh,ack,urg action=add-src-to
 scanners" address-list-timeout=2w comment="ALL/ALL scan" 
 add chain=input protocol=tcp tcp-flags=!fin,!syn,!rst,!psh,!ack,!urg action=add-src-to-address-list address
 list="port scanners" address-list-timeout=2w comment="NMAP NULL scan" 
+
 Rule-2 
+
 /ip firewall filter 
 add chain=input src-address-list="port scanners" action=drop comment="dropping port scanners" disabled=no 
 add chain=forward src-address-list="port scanners" action=drop comment="dropping port scanners" disabled=no 
-MIKROTIK: Como bloquear conexão TCP de estado 
+
+# MIKROTIK: Como bloquear conexão TCP de estado 
 inválido no seu dispositivo mikrotik 
+
 Vamos lá Existem muitas sessões TCP inválidas que foram criadas e você quer bloquear essas conexões TCP. 
 Vamos configurar o comando abaixo para bloquear os estados inválidos e eu permitirei apenas o estado TCP 
 estabelecido. 
+
 /ip firewall filter 
 add chain=forward connection-state=invalid \ action=drop comment="drop invalid connections" 
 add chain=forward connection-state=established action=accept \ comment="allow already established 
 connections" 
 add chain=forward connection-state=related action=accept \ comment="allow related connections" 
-MIKROTIK: Como bloquear esses BOGON IP's no seu 
+
+# MIKROTIK: Como bloquear esses BOGON IP's no seu 
 mikrotik. 
+
 Se você quiser fornecer mais e mais segurança ao seu mikrotik, você tem que bloquear essas listas de IP no seu 
 mikrotik porque em algum momento você pode ver que há muito mais conexões presentes no seu mikrotik. Eu 
 recomendo que você bloqueie esses pools de IP, o que é necessário. 
+
 /ip firewall filter 
 add chain=forward src-address=0.0.0.0/8 action=drop \ comment="Block Bogon IP addresses" 
 add chain=forward dst-address=0.0.0.0/8 action=drop 
@@ -248,9 +271,12 @@ add chain=forward src-address=127.0.0.0/8 action=drop
 add chain=forward dst-address=127.0.0.0/8 action=drop 
 add chain=forward src-address=224.0.0.0/3 action=drop 
 add chain=forward dst-address=224.0.0.0/3 action=drop 
-MIKROTIK:- Portas TCP recomendadas para bloquear no 
+
+# MIKROTIK:- Portas TCP recomendadas para bloquear no 
 mikrotik. 
+
 Recomendo que você bloqueie essas portas TCP no mikrotik caso haja algum ataque chegando. 
+
 /ip firewall filter 
 add chain=tcp protocol=tcp dst-port=69 action=drop \ comment="deny TFTP" 
 add chain=tcp protocol=tcp dst-port=111 action=drop \ comment="deny RPC portmapper" 
@@ -262,10 +288,14 @@ add chain=tcp protocol=tcp dst-port=12345-12346 action=drop comment="deny NetBus
 add chain=tcp protocol=tcp dst-port=20034 action=drop comment="deny NetBus" 
 add chain=tcp protocol=tcp dst-port=3133 action=drop comment="deny  BackOriffice" 
 add chain=tcp protocol=tcp dst-port=67-68 action=drop comment="deny DHCP" 
-MIKROTIK: Como bloquear essas portas UDP 
-relacionadas a vírus no seu mikrotik. 
+
+# MIKROTIK: Como bloquear essas portas UDP 
+relacionadas a vírus no seu mikrotik.
+
+
 Neste blog, vou discutir sobre a segurança do mikrotik porque, como todos sabemos, é muito difícil proteger o 
 mikrotik. Aqui, vou bloquear algumas portas UDP. 
+
 /ip firewall filter 
 add chain=udp protocol=udp dst-port=69 action=drop comment="deny TFTP" 
 add chain=udp protocol=udp dst-port=111 action=drop comment="deny PRC portmapper" 
@@ -273,10 +303,13 @@ add chain=udp protocol=udp dst-port=135 action=drop comment="deny PRC portmapper
 add chain=udp protocol=udp dst-port=137-139 action=drop comment="deny NBT" 
 add chain=udp protocol=udp dst-port=2049 action=drop comment="deny NFS" 
 add chain=udp protocol=udp dst-port=3133 action=drop comment="deny BackOriffice" 
-MIKROTIK: Bloquear portas de vírus 
+
+# MIKROTIK: Bloquear portas de vírus
+
 Às vezes, você pode ver em sua rede corporativa que há uma enorme utilização de largura de banda e também 
 a utilização da CPU seria alta. Então, nesse tipo de cenário, você tem que dar ao seu mikrotik 
 maior segurança. Por favor, bloqueie essas portas de vírus. 
+
 /ip firewall filter 
 add chain=virus protocol=tcp dst-port=135-139 action=drop comment="Drop Blaster Worm"  
 add chain=virus protocol=udp dst-port=135-139 action=drop comment="Drop Messenger Worm"     
@@ -310,17 +343,23 @@ add chain=virus protocol=tcp dst-port=17300 action=drop comment="Drop Kuang2"
 add chain=virus protocol=tcp dst-port=27374 action=drop comment="Drop SubSeven"  
 add chain=virus protocol=tcp dst-port=65506 action=drop comment="Drop PhatBot, Agobot, Gaobot" 
 add chain=forward action=jump jump-target=virus comment="jump to the virus chain" 
-add chain=virus protocol=tcp dst-port=139 action=drop comment="Drop WannaCrypt" 
-MIKROTIK: Como fornecer mais segurança ao seu 
+add chain=virus protocol=tcp dst-port=139 action=drop comment="Drop WannaCrypt"
+
+# MIKROTIK: Como fornecer mais segurança ao seu 
 roteador mikrotik!! 
+
 Se você quiser proteger seu MikroTik Firewall, use as regras criadas abaixo. Você deve ter uma ideia muito 
-boa e deve testar completamente essa configuração antes de implantar em um ambiente ativo. 
+boa e deve testar completamente essa configuração antes de implantar em um ambiente ativo.
+
 /ip firewall address-list 
 add address=x.x.x.x/x comment=My Server Subnet list=safe 
+
 Digamos que nossa rede privada seja 192.168.1.0/24 e a interface pública (WAN) seja ether1. 
 Configuraremos o firewall para permitir conexões com o próprio roteador somente de nossa rede local e 
 descartaremos o restante. Também permitiremos o protocolo ICMP em qualquer interface para que qualquer 
 pessoa possa fazer ping em seu roteador pela Internet. 
+
+
 /ip firewall filter 
 add chain=input in-interface=ether10-WAN src-address-list=safe action=accept comment="Allow connections 
 from safe list" 
@@ -346,18 +385,24 @@ connections"
 add chain=forward connection-state=related action=accept comment="allow related connections" 
 add chain=forward comment="Allow all new outbound LAN connections" connection-state=new out
 interface=ether1-WAN 
+
 #Block "bogon" IP Addresses: 
+
 add chain=forward src-address=0.0.0.0/8 action=drop comment="block bogon ip addresses" 
 add chain=forward dst-address=0.0.0.0/8 action=drop comment="block bogon ip addresses"  
 add chain=forward src-address=127.0.0.0/8 action=drop comment="block bogon ip addresses" 
 add chain=forward dst-address=127.0.0.0/8 action=drop comment="block bogon ip addresses" 
 add chain=forward src-address=224.0.0.0/3 action=drop comment="block bogon ip addresses" 
-add chain=forward dst-address=224.0.0.0/3 action=drop comment="block bogon ip addresses" 
-#Make jumps to new chains: 
+add chain=forward dst-address=224.0.0.0/3 action=drop comment="block bogon ip addresses"
+
+#Make jumps to new chains:
+
 add chain=forward protocol=tcp action=jump jump-target=tcp comment="make jumps to new chains" 
 add chain=forward protocol=udp action=jump jump-target=udp comment="make jumps to new chains" 
 add chain=forward protocol=icmp action=jump jump-target=icmp comment="make jumps to new chains" 
+
 #Create TCP chain and deny some TCP ports in it: 
+
 add chain=tcp protocol=tcp dst-port=69 action=drop comment="deny TFTP" 
 add chain=tcp protocol=tcp dst-port=111 action=drop comment="deny RPC portmapper"  
 add chain=tcp protocol=tcp dst-port=135 action=drop comment="deny RPC portmapper"  
@@ -368,14 +413,18 @@ add chain=tcp protocol=tcp dst-port=12345-12346 action=drop comment="deny NetBus
 add chain=tcp protocol=tcp dst-port=20034 action=drop comment="deny NetBus"  
 add chain=tcp protocol=tcp dst-port=3133 action=drop comment="deny BackOriffice"  
 add chain=tcp protocol=tcp dst-port=67-68 action=drop comment="deny DHCP" 
+
 #Deny UDP ports in UDP chain: 
+
 add chain=udp protocol=udp dst-port=69 action=drop comment="deny TFTP"  
 add chain=udp protocol=udp dst-port=111 action=drop comment="deny PRC portmapper"  
 add chain=udp protocol=udp dst-port=135 action=drop comment="deny PRC portmapper"  
 add chain=udp protocol=udp dst-port=137-139 action=drop comment="deny NBT"  
 add chain=udp protocol=udp dst-port=2049 action=drop comment="deny NFS"  
 add chain=udp protocol=udp dst-port=3133 action=drop comment="deny BackOriffice" 
+
 #Allow only needed ICMP codes in ICMP chain: 
+
 add chain=icmp protocol=icmp icmp-options=0:0 action=accept comment="echo reply"  
 add chain=icmp protocol=icmp icmp-options=3:0 action=accept comment="net unreachable"  
 add chain=icmp protocol=icmp icmp-options=3:1 action=accept comment="host unreachable" 
