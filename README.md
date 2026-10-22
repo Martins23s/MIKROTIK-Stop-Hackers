@@ -68,9 +68,10 @@ list=ftp_stage1 address-list-timeout=1m comment="" disabled=no
 Se houver algum ataque chegando à sua rede e se houver muitas conexões desnecessárias estabelecidas, habilite 
 alguns recursos de segurança aprimorados do mikrotik. Como
 
-# 1-Remova a solicitação de DNS da sua interface WAN 
-# 2-Remova todas as sessões TCP inválidas no seu mikrotik. 
-# 3-Remova a opção de seleção de "Permitir solicitação remota dentro do seu IP>DNS" 
+ 1-Remova a solicitação de DNS da sua interface WAN 
+ 2-Remova todas as sessões TCP inválidas no seu mikrotik. 
+ 3-Remova a opção de seleção de "Permitir solicitação remota dentro do seu IP>DNS" 
+ 
 
 O ataque DoS (Negação de serviço) pode causar sobrecarga de um roteador. O que significa que o uso da CPU vai 
 para 100% e o roteador pode se tornar inacessível com tempos limite. Todas as operações em pacotes que podem 
