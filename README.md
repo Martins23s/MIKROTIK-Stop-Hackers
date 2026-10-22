@@ -385,29 +385,36 @@ add chain=icmp protocol=icmp icmp-options=4:0 action=accept comment="allow sourc
 add chain=icmp protocol=icmp icmp-options=8:0 action=accept comment="allow echo request"  
 add chain=icmp protocol=icmp icmp-options=11:0 action=accept comment="allow time exceed"  
 add chain=icmp protocol=icmp icmp-options=12:0 action=accept comment="allow parameter bad"  
-add chain=icmp action=drop comment="deny all other types"  
-MIKROTIK: Como bloquear qualquer site usando o 
-firewall do roteador Mikrotik! 
+add chain=icmp action=drop comment="deny all other types"
+
+# MIKROTIK: Como bloquear qualquer site usando o 
+firewall do roteador Mikrotik!
+
 Aqui não vou mostrar como escrever a expressão regular para diferentes sites. Vou ajudar você a ter uma visão 
 geral para escrever a expressão regular quando houver um desafio para bloquear qualquer site. Vamos 
 considerar, vou bloquear o youtube.com em minha rede completa. Esta expressão regular vai ajudar você a 
-bloquear qualquer site que você quiser. Então tenha em mente como escrever a expressão regular. 
+bloquear qualquer site que você quiser. Então tenha em mente como escrever a expressão regular.
+
+
 lets go to IP>Firewall>Layer 7 protocols 
 /ip/ip firewall layer7-protocol 
 add name="Block_youtube" regexp="^.+(youtube.com).*$" 
 Etapa 2 crie a regra de firewall para descartar o tráfego do Youtube.com 
 /ip firewall filter 
 add action=drop chain=forward disabled=yes dst-port=80,443 layer7-protocol=\ 
-"Block_youtube" protocol=tcp 
+"Block_youtube" protocol=tcp
+
 Da mesma forma que você pode fazer as regras de qualquer site e pode escrever a expressão regular apropriada 
 dessa forma. 
-MIKROTIK: Tráfego ICMP com maior prioridade no 
-roteador Mikrotik. 
+
+# MIKROTIK: Tráfego ICMP com maior prioridade no 
+roteador Mikrotik.
+
 Às vezes, você pode ver que há perda de pacotes ICMP enquanto os usuários na sua rede estão tentando fazer 
 ping em qualquer host de destino. E devido a esse problema, os usuários estão recebendo altos ms. Vamos iniciar 
 a configuração para dar maior prioridade aos usuários. 
  
-Passo 1  
+# Passo 1  
  
 Crie uma regra Mangle para marcar a conexão do ICMP e depois de marcar as conexões do ICMp você terá que 
 marcar os pacotes ICMP.  Crie uma regra de mangle Primeiro. 
@@ -423,7 +430,7 @@ crie uma fila simples para fornecer a largura de banda exata aos pacotes ICMP.
 /queue simple 
 add comment=ICMP max-limit=4M/4M name=ICMP packet-marks=ICMP_PKT  target="" 
  
-MIKROTIK: Como bloquear torrent na sua rede usando a 
+# MIKROTIK: Como bloquear torrent na sua rede usando a 
 Camada 7 
  
 Step 1: 
@@ -447,7 +454,7 @@ add action=add-src-to-address-list address-list=Torrent-Conn \
 add action=add-src-to-address-list address-list=Torrent-Conn \ 
     address-list-timeout=2m chain=forward p2p=all-p2p src-address=\ 
  
-    10.10.10.0/24 src-address-list=!allow-bit 
+10.10.10.0/24 src-address-list=!allow-bit 
  
 Bloqueie essas portas para estabelecimento de pares de torrents. 
  
@@ -459,9 +466,9 @@ add action=drop chain=forward dst-port=!0-1024,8291,5900,5800,3389,14147,5222,59
 add action=drop chain=forward dst-port=!0-1024,8291,5900,5800,3389,14147,5222,59905 protocol=udp 
 \ 
  
-    src-address-list=Torrent-Conn 
+src-address-list=Torrent-Conn 
  
-MIKROTIK: Bloqueio de porta do vírus Conflicker no 
+# MIKROTIK: Bloqueio de porta do vírus Conflicker no 
 mikrotik 
  
 Esta é uma regra muito importante para o mikrotik porque às vezes você pode ver que há muito tráfego que é 
@@ -474,27 +481,19 @@ terminal winbox.
  
 /ip firewall filter 
 add chain=forward action=drop protocol=tcp dst-port=135 comment="conficker virus block" 
+add chain=forward action=drop protocol=tcp dst-port=139  comment="conficker virus block
+ 
+add chain=forward action=drop protocol=tcp dst-port=5933 comment="conficker virus block 
+add chain=forward action=drop protocol=tcp dst-port=5933 comment="conficker virus block 
+ 
+add chain=forward action=drop protocol=udp dst-port=135 comment="conficker virus block 
  
  
-    add chain=forward action=drop protocol=tcp dst-port=139  comment="conficker virus block" 
+add chain=forward action=drop protocol=udp dst-port=137 comment="conficker virus block 
+add chain=forward action=drop protocol=udp dst-port=138 comment="conficker virus block 
  
  
-    add chain=forward action=drop protocol=tcp dst-port=5933 comment="conficker virus block" 
+add chain=forward action=drop protocol=udp dst-port=445 comment="conficker virus block
  
  
-    add chain=forward action=drop protocol=tcp dst-port=5933 comment="conficker virus block" 
- 
- 
-    add chain=forward action=drop protocol=udp dst-port=135 comment="conficker virus block" 
- 
- 
-    add chain=forward action=drop protocol=udp dst-port=137 comment="conficker virus block" 
- 
- 
-    add chain=forward action=drop protocol=udp dst-port=138 comment="conficker virus block" 
- 
- 
-    add chain=forward action=drop protocol=udp dst-port=445 comment="conficker virus block
- 
- 
-    add chain=forward action=drop protocol=tcp dst-port=445 comment="conficker virus block
+add chain=forward action=drop protocol=tcp dst-port=445 comment="conficker virus block
