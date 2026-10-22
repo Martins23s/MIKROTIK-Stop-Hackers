@@ -8,7 +8,8 @@ Material destinado a adicionar camadas de segunrança do MK
 
 Às vezes, você pode ver que muitas conexões SSH foram estabelecidas em seu roteador e, devido a esse 
 problema, o processo da CPU do roteador será alto e a utilização da largura de banda será alta. Então, nesse 
-caso, você pode considerar isso como um ataque de força bruta SSH em sua rede. 
+caso, você pode considerar isso como um ataque de força bruta SSH em sua rede.
+
 / ip firewall filter 
 add chain=input protocol=tcp dst-port=22 src-address-list=ssh_blacklist action=drop comment="Drop SSH Brute 
 Forcers" disabled=no 
@@ -87,12 +88,13 @@ Geralmente, não há uma solução perfeita para proteger contra ataques DoS. Ca
 sobrecarregado por muitas solicitações. Portanto, existem apenas alguns métodos para minimizar o impacto do 
 ataque. 
 Obtenha um roteador ou servidor mais poderoso 
-> Obtenha um link de uplink mais rápido 
-> Reduza o número de regras de firewall, filas e outras ações de tratamento de pacotes 
-> Rastreie o caminho do ataque e bloqueie-o mais perto da fonte (pelo provedor upstream) 
-> Inundação TCP SYN 
-> Mais informações: Inundação SYN. 
-> Diagnosticar 
+Obtenha um link de uplink mais rápido 
+Reduza o número de regras de firewall, filas e outras ações de tratamento de pacotes 
+Rastreie o caminho do ataque e bloqueie-o mais perto da fonte (pelo provedor upstream)
+
+Inundação TCP SYN 
+Mais informações: Inundação SYN. 
+Diagnosticar 
 Vamos começar a configuração. 
 Aqui, mostrarei as 3 regras mais importantes sobre ataques DDOS, mas você precisa configurar apenas uma 
 regra no seu mikrotik por vez . Como o propósito de todas as regras é o mesmo, não há necessidade de 
