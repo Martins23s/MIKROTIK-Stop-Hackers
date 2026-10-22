@@ -5,13 +5,21 @@ Material destinado a adicionar camadas de segunrança do MK
 O material reúne exemplos práticos de proteção contra:
 
 ✅ SSH Brute Force
+
 ✅ FTP e Telnet Brute Force
+
 ✅ DDoS e SYN Flood
+
 ✅ Port Scanner Detection
+
 ✅ ICMP Flood
+
 ✅ Bloqueio de portas vulneráveis e vírus
+
 ✅ Bogon IPs
+
 ✅ Layer 7 para bloqueio de sites e torrents
+
 ✅ Boas práticas de hardening para MikroTik
 
 
